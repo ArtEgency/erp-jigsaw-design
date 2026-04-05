@@ -30,12 +30,12 @@ export const COMPONENT_STATUS: Record<string, ApprovalStatus> = {
 
 /* ── Icon Showcase (icon/page.tsx) ── */
 export const ICON_STATUS: Record<string, ApprovalStatus> = {
-  "Main Menu Icons": "waiting",
-  "Action Icons": "waiting",
-  "Status Icons": "waiting",
-  "Navigation Icons": "waiting",
-  "Data Icons": "waiting",
-  "Commerce Icons": "waiting",
+  "Main Menu Icons": "approved",
+  "Action Icons": "approved",
+  "Status Icons": "approved",
+  "Navigation Icons": "approved",
+  "Data Icons": "approved",
+  "Commerce Icons": "approved",
 };
 
 /* ── Template Showcase (template/page.tsx) ── */

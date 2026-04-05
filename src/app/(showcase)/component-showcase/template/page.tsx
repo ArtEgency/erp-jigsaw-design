@@ -900,70 +900,87 @@ export default function TemplatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F7F9] flex">
+    <Box sx={{ minHeight: "100vh", bgcolor: "#F7F7F9", display: "flex" }}>
       {/* Left: Template Sidebar — collapsible */}
-      <div
-        className="bg-white border-r border-gray-200 flex flex-col shrink-0 h-screen sticky top-0 transition-all duration-300 overflow-hidden"
-        style={{ width: sidebarOpen ? 280 : 0 }}
+      <Box
+        sx={{
+          bgcolor: "white", borderRight: "1px solid #E5E7EB", display: "flex", flexDirection: "column",
+          flexShrink: 0, height: "100vh", position: "sticky", top: 0,
+          transition: "width 300ms", overflow: "hidden", width: sidebarOpen ? 280 : 0,
+        }}
       >
         {/* Header */}
-        <div className="px-4 py-3 border-b border-gray-100 flex items-start justify-between" style={{ minWidth: 280 }}>
-          <div>
+        <Box sx={{ px: 2, py: 1.5, borderBottom: "1px solid #f5f5f5", display: "flex", alignItems: "flex-start", justifyContent: "space-between", minWidth: 280 }}>
+          <Box>
             <Button startIcon={<ArrowBackIcon />} size="small" onClick={() => router.push("/component-showcase")} sx={{ color: "#999", textTransform: "none", mb: 1 }}>
               กลับ Component Showcase
             </Button>
             <Typography variant="h6" sx={{ fontWeight: 700, color: "#FF6B00" }}>Template</Typography>
             <Typography variant="caption" sx={{ color: "#999" }}>เลือก template เพื่อดูตัวอย่าง</Typography>
-          </div>
+          </Box>
           <IconButton size="small" onClick={() => setSidebarOpen(false)} sx={{ mt: 0.5 }}>
             <ChevronLeftIcon />
           </IconButton>
-        </div>
+        </Box>
 
         {/* Category List */}
-        <div className="flex-1 overflow-y-auto py-2" style={{ fontFamily: "'Sarabun', sans-serif", minWidth: 280 }}>
+        <Box sx={{ flex: 1, overflowY: "auto", py: 1, fontFamily: "'Sarabun', sans-serif", minWidth: 280 }}>
           {TEMPLATE_CATEGORIES.map((cat) => (
-            <div key={cat.id} className="mb-1">
+            <Box key={cat.id} sx={{ mb: 0.5 }}>
               {/* Category header */}
-              <button
+              <Box
+                component="button"
                 onClick={() => toggleCategory(cat.id)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
-                style={{ fontSize: 15, fontWeight: 500 }}
+                sx={{
+                  width: "100%", display: "flex", alignItems: "center", gap: 1.5, px: 2, py: 1.25,
+                  color: "#374151", fontSize: 15, fontWeight: 500, border: "none", cursor: "pointer",
+                  bgcolor: "transparent", transition: "background 150ms",
+                  "&:hover": { bgcolor: "#fafafa" },
+                }}
               >
-                <span style={{ color: "#777" }}>{cat.icon}</span>
-                <span className="flex-1 text-left">{cat.label}</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`transition-transform ${expandedCategories[cat.id] ? "rotate-180" : ""}`}>
+                <Box component="span" sx={{ color: "#777" }}>{cat.icon}</Box>
+                <Box component="span" sx={{ flex: 1, textAlign: "left" }}>{cat.label}</Box>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ transition: "transform 200ms", transform: expandedCategories[cat.id] ? "rotate(180deg)" : "none" }}>
                   <polyline points="6 9 12 15 18 9"/>
                 </svg>
-              </button>
+              </Box>
 
               {/* Sub-items */}
               {expandedCategories[cat.id] && (
-                <div className="ml-4 border-l-2 border-gray-100">
-                  {cat.items.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setSelectedTemplate(item.id)}
-                      className={`w-full text-left px-4 py-2 transition-colors ${
-                        selectedTemplate === item.id
-                          ? "text-[#FF6B00] font-semibold border-l-2 border-[#FF6B00] -ml-[2px] bg-[#FF6B00]/5"
-                          : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-                      }`}
-                      style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}
-                    >
-                      <span style={{ flex: 1 }}>{item.label}</span>
-                      <ApprovalBadge status={TEMPLATE_STATUS[item.id]} />
-                    </button>
-                  ))}
-                </div>
+                <Box sx={{ ml: 2, borderLeft: "2px solid #f5f5f5" }}>
+                  {cat.items.map((item) => {
+                    const isActive = selectedTemplate === item.id;
+                    return (
+                      <Box
+                        key={item.id}
+                        component="button"
+                        onClick={() => setSelectedTemplate(item.id)}
+                        sx={{
+                          width: "100%", textAlign: "left", px: 2, py: 1, fontSize: 14,
+                          display: "flex", alignItems: "center", gap: 0.75,
+                          border: "none", cursor: "pointer", transition: "all 150ms",
+                          color: isActive ? "#FF6B00" : "#6B7280",
+                          fontWeight: isActive ? 600 : 400,
+                          bgcolor: isActive ? "rgba(255,107,0,0.05)" : "transparent",
+                          borderLeft: isActive ? "2px solid #FF6B00" : "2px solid transparent",
+                          ml: isActive ? "-2px" : 0,
+                          "&:hover": isActive ? {} : { color: "#374151", bgcolor: "#fafafa" },
+                        }}
+                      >
+                        <Box component="span" sx={{ flex: 1 }}>{item.label}</Box>
+                        <ApprovalBadge status={TEMPLATE_STATUS[item.id]} />
+                      </Box>
+                    );
+                  })}
+                </Box>
               )}
-            </div>
+            </Box>
           ))}
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       {/* Right: Preview Area */}
-      <div className="flex-1 p-6 overflow-y-auto">
+      <Box sx={{ flex: 1, p: 3, overflowY: "auto" }}>
         {/* Template Info Bar */}
         <Paper sx={{ px: 3, py: 2, mb: 3, borderRadius: 2, display: "flex", alignItems: "center", gap: 2, boxShadow: "0px 1px 4px rgba(0,0,0,0.08)" }}>
           {!sidebarOpen && (
@@ -1010,11 +1027,11 @@ export default function TemplatePage() {
           <Chip label="Preview" size="small" sx={{ bgcolor: "#FF6B00", color: "white", fontSize: 11 }} />
         </Paper>
 
-        {/* Preview Content — same layout as Tenant page (Box with bg, px/py) */}
+        {/* Preview Content */}
         <Box sx={{ bgcolor: "#F7F7F9", borderRadius: 2, px: 3, py: 3, minHeight: 400 }}>
           {renderPreview()}
         </Box>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
