@@ -27,3 +27,6 @@ export { ToastProvider, useToast } from "./Toast";
 
 // Dialogs & Handlers
 export { ExistingUsedDialog, useExistingUsedHandler } from "./ExistingUsedDialog";
+
+// Approval
+export { default as ApprovalBadge } from "./ApprovalBadge";

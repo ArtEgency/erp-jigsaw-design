@@ -21,6 +21,8 @@ import CategoryIcon from "@mui/icons-material/Category";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 
 import { TENANT_PRIMARY as OR } from "@/lib/theme";
+import { ICON_STATUS } from "@/data/component-status";
+import ApprovalBadge from "@/components/ui/ApprovalBadge";
 
 /* ══════════════════════════════════════ */
 /* ── ICON DATA ── */
@@ -307,6 +309,7 @@ function SectionBlock({
           {title}
         </Typography>
         <Chip label={`${count} icons`} size="small" variant="outlined" sx={{ fontSize: "0.7rem" }} />
+        <ApprovalBadge status={ICON_STATUS[title]} />
       </Stack>
       <Typography variant="body2" color="text.secondary" sx={{ mb: 2.5, fontSize: "0.85rem" }}>
         {description}

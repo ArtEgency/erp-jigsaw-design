@@ -124,6 +124,8 @@ import {
 } from "@/components/ui";
 
 import { TENANT_PRIMARY as OR } from "@/lib/theme";
+import { COMPONENT_STATUS } from "@/data/component-status";
+import ApprovalBadge from "@/components/ui/ApprovalBadge";
 
 /* ══════════════════════════════════════ */
 /* ── SIDEBAR MENU (Grouped) ── */
@@ -206,9 +208,12 @@ const ALL_SECTIONS = SECTION_GROUPS.flatMap((g) => g.items);
 function SectionBlock({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <Box id={id} sx={{ mb: 5, scrollMarginTop: "80px" }}>
-      <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: OR, borderBottom: `2px solid ${OR}`, pb: 1, display: "inline-block" }}>
-        {title}
-      </Typography>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, color: OR, borderBottom: `2px solid ${OR}`, pb: 1, display: "inline-block" }}>
+          {title}
+        </Typography>
+        <ApprovalBadge status={COMPONENT_STATUS[id]} />
+      </Box>
       <Paper sx={{ p: 3, borderRadius: 2 }}>
         {children}
       </Paper>

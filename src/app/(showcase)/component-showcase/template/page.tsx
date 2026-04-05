@@ -12,6 +12,8 @@ import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 // ActionButtons used in DataList — referenced by description only
 
 const SA = "#FF6B00"; // SA Primary color
+import { TEMPLATE_STATUS } from "@/data/component-status";
+import ApprovalBadge from "@/components/ui/ApprovalBadge";
 
 /* ══════════════════════════════════════════════════
    Template Categories & Items
@@ -947,9 +949,10 @@ export default function TemplatePage() {
                           ? "text-[#FF6B00] font-semibold border-l-2 border-[#FF6B00] -ml-[2px] bg-[#FF6B00]/5"
                           : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
                       }`}
-                      style={{ fontSize: 14 }}
+                      style={{ fontSize: 14, display: "flex", alignItems: "center", gap: 6 }}
                     >
-                      {item.label}
+                      <span style={{ flex: 1 }}>{item.label}</span>
+                      <ApprovalBadge status={TEMPLATE_STATUS[item.id]} />
                     </button>
                   ))}
                 </div>
@@ -997,6 +1000,7 @@ export default function TemplatePage() {
               <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
                 {TEMPLATE_CATEGORIES.flatMap(c => c.items).find(i => i.id === selectedTemplate)?.label || "Template"}
               </Typography>
+              {selectedTemplate && <ApprovalBadge status={TEMPLATE_STATUS[selectedTemplate]} />}
             </Stack>
             <Typography variant="caption" sx={{ color: "#999" }}>
               {TEMPLATE_CATEGORIES.flatMap(c => c.items).find(i => i.id === selectedTemplate)?.description || ""}
