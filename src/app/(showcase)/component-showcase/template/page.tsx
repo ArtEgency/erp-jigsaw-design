@@ -51,6 +51,7 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     items: [
       { id: "meatball-menu", label: "Meatball Menu", labelEn: "Meatball Menu", description: "Popup เมนูจากปุ่ม ⋮ — ส่ง Email, Reset รหัสผ่าน, แก้ไข, ระงับ" },
       { id: "modal-size-m", label: "Modal Size M", labelEn: "Modal Size M", description: "MUI Dialog 820×507 + Resizable + Header ส้ม + Form fields + Footer ยกเลิก/บันทึก" },
+      { id: "confirm-modal", label: "Confirm Modal", labelEn: "Confirm Modal", description: "Modal ยืนยันการกระทำ — แถบสีบน + ข้อความกลาง + ปุ่ม ไม่ใช่/ใช่ ตาม Figma" },
     ],
   },
   {
@@ -72,6 +73,7 @@ const TEMPLATE_CATEGORIES: TemplateCategory[] = [
     items: [
       { id: "create-account", label: "สร้าง Master Account", labelEn: "Create Master Account", description: "FormDialog + TextField + Select + Validation" },
       { id: "create-tenant", label: "สร้าง Tenant", labelEn: "Create Tenant", description: "SlidePanel + ToggleButton + Radio + Contract" },
+      { id: "form-with-tab-1", label: "Form with Tab 1", labelEn: "Form with Tab 1", description: "Form + Tabs + View/Edit Mode สลับได้ + Status Toggle + Confirm Modal + 4 columns layout" },
     ],
   },
   {
@@ -694,6 +696,168 @@ function PreviewQuotation() {
   );
 }
 
+/* ── Preview: Confirm Modal (แสดง inline + กดเล่นได้) ── */
+function PreviewConfirmModal() {
+  const [result, setResult] = useState("");
+  const [dialogOpen, setDialogOpen] = useState(false);
+  return (
+    <Box>
+      <Typography sx={{ fontSize: 18, fontWeight: 700, color: SA, mb: 2 }}>Confirm Modal</Typography>
+      <Typography sx={{ fontSize: 14, color: "#6B7280", mb: 3 }}>Modal ยืนยันการกระทำ — แถบสีบนสุด + ข้อความกลาง + ปุ่ม ไม่ใช่/ใช่</Typography>
+
+      <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+        <Button variant="contained" onClick={() => setDialogOpen(true)} sx={{ bgcolor: SA, textTransform: "none", borderRadius: "8px", "&:hover": { bgcolor: "#E65C00" } }}>
+          เปิด Confirm Modal (Dialog)
+        </Button>
+      </Stack>
+
+      {result && (
+        <Paper sx={{ p: 2, bgcolor: result === "confirmed" ? "#EEFBE5" : "#FEF2F2", borderRadius: 2, mb: 3 }}>
+          <Typography sx={{ fontSize: 14, color: result === "confirmed" ? "#3B6D11" : "#B91C1C" }}>
+            ผลลัพธ์: {result === "confirmed" ? "✅ ยืนยันแล้ว" : "❌ ยกเลิก"}
+          </Typography>
+        </Paper>
+      )}
+
+      {/* ── Inline Preview (แสดงขึ้นมาเลย เหมือน Modal Size M) ── */}
+      <Paper sx={{ maxWidth: 460, mx: "auto", borderRadius: "10px", overflow: "hidden", boxShadow: "0px 0px 20px rgba(76,78,100,0.2)", mb: 4 }}>
+        <Box sx={{ height: 50, bgcolor: SA }} />
+        <Box sx={{ position: "relative" }}>
+          <IconButton sx={{ position: "absolute", top: 8, right: 8, color: "#6B7280" }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </IconButton>
+          <Box sx={{ px: 4, pt: 4, pb: 3, textAlign: "center" }}>
+            <Typography sx={{ fontSize: 22, fontWeight: 500, color: "#374151", lineHeight: 1.7 }}>
+              คุณต้องการ<br />
+              <Box component="span" sx={{ color: SA, fontWeight: 700 }}>&ldquo;ปิดการใช้งาน&rdquo;</Box>
+              {" "}ใช่หรือไม่
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", justifyContent: "center", gap: 1.5, pb: 3 }}>
+            <Button variant="outlined" onClick={() => setResult("cancelled")} sx={{ textTransform: "none", fontSize: 15, color: "#4C4E63", borderColor: "#B8B8C2", borderRadius: "8px", px: 3, height: 40 }}>ไม่ใช่</Button>
+            <Button variant="contained" onClick={() => setResult("confirmed")} sx={{ textTransform: "none", fontSize: 15, bgcolor: SA, borderRadius: "8px", px: 3, height: 40, "&:hover": { bgcolor: "#E65C00" } }}>ใช่</Button>
+          </Box>
+        </Box>
+      </Paper>
+
+      {/* Spec */}
+      <Paper sx={{ p: 2.5, bgcolor: "#F9FAFB", borderRadius: 2, border: "1px solid #E5E7EB" }}>
+        <Typography sx={{ fontSize: 13, fontWeight: 600, color: "#374151", mb: 1 }}>Component Usage:</Typography>
+        <Typography sx={{ fontSize: 12, fontFamily: "monospace", color: "#6B7280", whiteSpace: "pre-wrap" }}>
+{`import ConfirmModal from "@/components/ui/ConfirmModal";
+
+<ConfirmModal
+  open={open}
+  onClose={() => setOpen(false)}
+  onConfirm={handleConfirm}
+  actionText="ปิดการใช้งาน"
+  // Optional:
+  prefixText="คุณต้องการ"
+  suffixText="ใช่หรือไม่"
+  confirmLabel="ใช่"
+  cancelLabel="ไม่ใช่"
+  color="#FF6B00"
+/>`}
+        </Typography>
+      </Paper>
+
+      {/* Dialog version (เปิดจากปุ่ม) */}
+      <Dialog
+        open={dialogOpen}
+        onClose={() => { setDialogOpen(false); setResult("cancelled"); }}
+        PaperProps={{ sx: { borderRadius: "10px", overflow: "hidden", minWidth: 420, maxWidth: 460, boxShadow: "0px 0px 20px rgba(76,78,100,0.2)" } }}
+      >
+        <Box sx={{ height: 50, bgcolor: SA }} />
+        <IconButton onClick={() => { setDialogOpen(false); setResult("cancelled"); }} sx={{ position: "absolute", top: 60, right: 12, color: "#6B7280" }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </IconButton>
+        <Box sx={{ px: 4, pt: 4, pb: 3, textAlign: "center" }}>
+          <Typography sx={{ fontSize: 22, fontWeight: 500, color: "#374151", lineHeight: 1.7 }}>
+            คุณต้องการ<br />
+            <Box component="span" sx={{ color: SA, fontWeight: 700 }}>&ldquo;ปิดการใช้งาน&rdquo;</Box>
+            {" "}ใช่หรือไม่
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 1.5, pb: 3 }}>
+          <Button variant="outlined" onClick={() => { setDialogOpen(false); setResult("cancelled"); }} sx={{ textTransform: "none", fontSize: 15, color: "#4C4E63", borderColor: "#B8B8C2", borderRadius: "8px", px: 3, height: 40 }}>ไม่ใช่</Button>
+          <Button variant="contained" onClick={() => { setDialogOpen(false); setResult("confirmed"); }} sx={{ textTransform: "none", fontSize: 15, bgcolor: SA, borderRadius: "8px", px: 3, height: 40, "&:hover": { bgcolor: "#E65C00" } }}>ใช่</Button>
+        </Box>
+      </Dialog>
+    </Box>
+  );
+}
+
+/* ── Preview: Form with Tab 1 ── */
+function PreviewFormWithTab1() {
+  const [tab, setTab] = useState(0);
+  const [isEditing, setIsEditing] = useState(false);
+  const [form, setForm] = useState({ id: "MA-69-03-0001", company: "โรงคั่วกาแฟพะเยา", group: "ขายส่ง", quota: "3", title: "นางสาว", firstName: "น้ำทิพย์", lastName: "บัวพิทักษ์", position: "ผู้จัดการ", email: "namtip@gmail.com", phone: "0661541519" });
+
+  const VIEW_SX = { "& .MuiOutlinedInput-root": { bgcolor: "#F8F8F9", borderRadius: "8px", fontSize: 15, "& .MuiOutlinedInput-notchedOutline": { borderColor: "rgba(76,78,100,0.22)" } }, "& .MuiInputLabel-root": { fontSize: 14, color: "#6B7280" }, "& .MuiFormLabel-asterisk": { color: "#FF4D49" } };
+  const EDIT_SX = { "& .MuiOutlinedInput-root": { bgcolor: "#FFF", borderRadius: "8px", fontSize: 15, "& .MuiOutlinedInput-notchedOutline": { borderColor: "rgba(76,78,100,0.22)" }, "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: SA }, "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: SA, borderWidth: "1.5px" } }, "& .MuiInputLabel-root": { fontSize: 14, color: "#6B7280", "&.Mui-focused": { color: SA } }, "& .MuiFormLabel-asterisk": { color: "#FF4D49" } };
+  const sx = isEditing ? EDIT_SX : VIEW_SX;
+  const ro = !isEditing;
+
+  return (
+    <Box>
+      <Typography sx={{ fontSize: 18, fontWeight: 700, color: SA, mb: 1 }}>Form with Tab 1</Typography>
+      <Typography sx={{ fontSize: 14, color: "#6B7280", mb: 3 }}>Form + Tabs + View/Edit Mode สลับได้ — กดแก้ไขเพื่อเปิดแก้ fields</Typography>
+
+      {/* Mode indicator */}
+      <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+        <Chip label={isEditing ? "Edit Mode" : "View Mode"} size="small" sx={{ fontWeight: 600, fontSize: 12, bgcolor: isEditing ? "#FFF7ED" : "#F3F4F6", color: isEditing ? SA : "#6B7280" }} />
+      </Stack>
+
+      {/* Tabs */}
+      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 2, "& .MuiTab-root": { textTransform: "none", fontWeight: 500, fontSize: "0.9rem", minHeight: 38, borderRadius: "8px", mr: 0.5, px: 2 }, "& .Mui-selected": { bgcolor: SA, color: "#fff !important", fontWeight: 600 }, "& .MuiTabs-indicator": { display: "none" } }}>
+        <Tab label="ข้อมูลทั่วไป" />
+        <Tab label="ข้อมูลธุรกิจ (0/3)" />
+        <Tab label="ประวัติ" />
+      </Tabs>
+
+      {tab === 0 && (
+        <Paper sx={{ borderRadius: "10px", p: 3, boxShadow: "0px 2px 10px rgba(76,78,100,0.12)" }}>
+          <Typography sx={{ fontSize: 18, fontWeight: 700, color: SA, mb: 2.5 }}>ข้อมูลทั่วไป</Typography>
+
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <TextField label="รหัส Account *" value={form.id} fullWidth InputProps={{ readOnly: true }} InputLabelProps={{ shrink: true }} sx={VIEW_SX} />
+            <TextField label="ชื่อร้าน / ชื่อบริษัท *" value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+            <TextField label="กลุ่มลูกค้า *" value={form.group} onChange={(e) => setForm({ ...form, group: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+            <TextField label="จำนวนธุรกิจ *" value={form.quota} onChange={(e) => setForm({ ...form, quota: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+          </Stack>
+
+          <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+            <TextField label="คำนำหน้า *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+            <TextField label="ชื่อ *" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+            <TextField label="นามสกุล *" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+            <TextField label="ตำแหน่ง" value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+          </Stack>
+
+          <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
+            <TextField label="อีเมล" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+            <TextField label="เบอร์โทรศัพท์" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} fullWidth InputProps={{ readOnly: ro }} InputLabelProps={{ shrink: true }} sx={sx} />
+            <TextField label="วันที่ลงทะเบียน" value="12/02/2026 - Admin" fullWidth InputProps={{ readOnly: true }} InputLabelProps={{ shrink: true }} sx={VIEW_SX} />
+            <TextField label="วันที่แก้ไขล่าสุด" value="12/02/2026 - Admin" fullWidth InputProps={{ readOnly: true }} InputLabelProps={{ shrink: true }} sx={VIEW_SX} />
+          </Stack>
+
+          <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Button variant="outlined" onClick={() => setIsEditing(false)} sx={{ textTransform: "none", fontSize: 15, color: "#374151", borderColor: "rgba(76,78,100,0.22)", borderRadius: "8px", height: 42, px: 3 }}>ยกเลิก</Button>
+            <Button variant="contained" onClick={() => setIsEditing(!isEditing)} sx={{ textTransform: "none", fontSize: 15, bgcolor: SA, borderRadius: "8px", height: 42, px: 3, "&:hover": { bgcolor: "#E65C00" } }}>
+              {isEditing ? "บันทึก" : "แก้ไข"}
+            </Button>
+          </Stack>
+        </Paper>
+      )}
+
+      {tab !== 0 && (
+        <Paper sx={{ borderRadius: "10px", p: 3, boxShadow: "0px 2px 10px rgba(76,78,100,0.12)" }}>
+          <Typography sx={{ fontSize: 15, color: "#9CA3AF" }}>Tab content placeholder</Typography>
+        </Paper>
+      )}
+    </Box>
+  );
+}
+
 function PreviewPlaceholder({ title }: { title: string }) {
   return (
     <Box sx={{ textAlign: "center", py: 8 }}>
@@ -722,6 +886,8 @@ export default function TemplatePage() {
       case "datalist-standard": return <PreviewDataListStandard />;
       case "meatball-menu": return <PreviewMeatballMenu />;
       case "modal-size-m": return <PreviewModalSizeM />;
+      case "confirm-modal": return <PreviewConfirmModal />;
+      case "form-with-tab-1": return <PreviewFormWithTab1 />;
       case "quotation": return <PreviewQuotation />;
       default: {
         const allItems = TEMPLATE_CATEGORIES.flatMap(c => c.items);

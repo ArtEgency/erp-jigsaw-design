@@ -3,6 +3,7 @@ import "./globals.css";
 import { ToastProvider } from "@/components/ui/Toast";
 import MuiThemeProvider from "@/lib/MuiThemeProvider";
 import { LocaleProvider } from "@/lib/locale";
+import { StyleInspector } from "@/components/dev/StyleInspector";
 
 export const metadata: Metadata = {
   title: "Jigsaw Master Design",
@@ -19,7 +20,10 @@ export default function RootLayout({
       <body className="antialiased">
         <MuiThemeProvider>
           <LocaleProvider>
-            <ToastProvider>{children}</ToastProvider>
+            <ToastProvider>
+              {children}
+              <StyleInspector />
+            </ToastProvider>
           </LocaleProvider>
         </MuiThemeProvider>
       </body>
